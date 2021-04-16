@@ -1,0 +1,4 @@
+﻿  WinUUID.cpp
+C:\Users\索隆的笔记本\Desktop\code\WinUUID\WinUUID\WinUUID\WinUUID.cpp(13,1): warning C4005: “_WIN32_WINNT”: 宏重定义
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\shared\SDKDDKVer.h(218): message : 参见“_WIN32_WINNT”的前一个定义
+  WinUUID.vcxproj -> C:\Users\索隆的笔记本\Desktop\code\WinUUID\WinUUID\Debug\WinUUID.exe
