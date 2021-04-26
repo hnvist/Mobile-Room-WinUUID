@@ -7,6 +7,7 @@
 #include "atlbase.h"
 #include "atlstr.h"
 #include "gdiplus.h"   
+#include <windows.h>
 
 #pragma comment(lib,"gdiplus.lib")
 
@@ -20,6 +21,8 @@ using namespace Gdiplus;
 HINSTANCE hInst;                                // 当前实例
 WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
 WCHAR szWindowClass[MAX_LOADSTRING];            // 主窗口类名
+HWND hwnd;                                      // 窗口句柄
+
 
 // 此代码模块中包含的函数的前向声明:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -53,6 +56,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDC_WINUUID, szWindowClass, MAX_LOADSTRING);
 
 
+    // 判断程序是否已经启动过了
+    HANDLE hMutex = CreateMutex(NULL, FALSE, TEXT("winUUID-show")); // 第一个参数一定是 NULL 不然没有用
+    if (GetLastError() == ERROR_ALREADY_EXISTS)
+    {
+        MessageBox(NULL, L"该程序已经启动过了！", L"错误", MB_OK);
+        CloseHandle(hMutex);
+        return(0);
+    }
+       
  
     MyRegisterClass(hInstance);
 
@@ -78,7 +90,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     return (int) msg.wParam;
 }
-
 
 
 //
@@ -136,19 +147,32 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    // UpdateWindow(hWnd);
 
 
-   HWND hwnd = CreateWindow(szWindowClass, TEXT("Noble Qiao~"),
+   hwnd = CreateWindow(szWindowClass, TEXT("winUUID-show"),
                 WS_POPUP | WS_SYSMENU | WS_VISIBLE,
                ::GetSystemMetrics(SM_CXSCREEN) - 260,
                0,
-              260, 70,
+              260, 110,
              NULL, NULL, hInstance, NULL);
 
    if (!hwnd) {
        return FALSE;
    }
-      
-   ::SetWindowLong(hwnd, GWL_EXSTYLE, GetWindowLong(hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);
-   SetLayeredWindowAttributes(hwnd, 0, (255 * 70) / 150, LWA_ALPHA);
+
+
+
+   // ::SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & (~(WS_CAPTION | WS_SYSMENU | WS_SIZEBOX)));
+
+   // 设置自动隐藏状态栏
+   ::SetWindowLong(hwnd, GWL_EXSTYLE, GetWindowLong(hwnd, GWL_EXSTYLE) & (~(WS_EX_WINDOWEDGE | WS_EX_DLGMODALFRAME)) | WS_EX_LAYERED | WS_EX_TOOLWINDOW);
+
+   // SetWindowPos(hwnd, HWND_TOPMOST, (GetSystemMetrics(SM_CXSCREEN) - 100) / 2, (GetSystemMetrics(SM_CYSCREEN) - 100) / 2, 100, 100, SWP_SHOWWINDOW | SWP_FRAMECHANGED | SWP_DRAWFRAME);
+   // SetLayeredWindowAttributes(hwnd, 0x000000, 0, LWA_COLORKEY);
+
+   
+
+    ::SetWindowLong(hwnd, GWL_EXSTYLE, GetWindowLong(hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);
+    SetLayeredWindowAttributes(hwnd, RGB(255, 0, 0), 200, LWA_ALPHA);
+
 
 
    return TRUE;
@@ -192,7 +216,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // TODO: 在此处添加使用 hdc 的任何绘图代码...
         
 
-            TCHAR greeting[] = _T("安院移动互联专业 NB");
+            TCHAR greeting[] = _T("安全职业技术学院移动互联实验室");
 
             // 获取计算机名称
             CString strName = _T("");
@@ -206,13 +230,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // 设置字体颜色
             SetTextColor(hdc, RGB(255, 0, 0));
             // 绘制版权信息
-            TextOut(hdc, 10, 45, greeting, _tcslen(greeting));
+            TextOut(hdc, 10, 85, greeting, _tcslen(greeting));
 
             // 设置字体
             LOGFONT logfont; //改变输出字体 
             ZeroMemory(&logfont, sizeof(LOGFONT));
             // logfont.lfCharSet = GB2312_CHARSET; 
-            logfont.lfHeight = -34; //设置字体的大小
+            logfont.lfHeight = -64; //设置字体的大小
             HFONT hFont = CreateFontIndirect(&logfont);
             SelectObject(hdc, hFont);
 
@@ -226,7 +250,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 
             // DeleteObject(hdc);
-           
 
             EndPaint(hWnd, &ps);
         }

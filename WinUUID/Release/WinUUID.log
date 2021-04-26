@@ -1,6 +1,9 @@
-﻿  正在生成代码
-  0 of 164 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+﻿  WinUUID.cpp
+C:\Users\lenovo\source\repos\Mobile-Room-WinUUID\WinUUID\WinUUID.cpp(13,1): warning C4005: “_WIN32_WINNT”: 宏重定义
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\shared\SDKDDKVer.h(218): message : 参见“_WIN32_WINNT”的前一个定义
+  正在生成代码
+  2 of 164 functions ( 1.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
-  WinUUID.vcxproj -> C:\Users\索隆的笔记本\Desktop\code\WinUUID\WinUUID\Release\WinUUID.exe
+  WinUUID.vcxproj -> C:\Users\lenovo\source\repos\Mobile-Room-WinUUID\Release\WinUUID.exe
